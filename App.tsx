@@ -19,7 +19,8 @@ export const SCREEN_AVAILABLE_WIDTH = Math.min(
   WEB_APP_MAX_WIDTH_PX,
   Dimensions.get("window").width
 );
-export const tmdbImageBaseUrl = "https://image.tmdb.org/t/p/w500";
+
+export const TMDB_IMAGES_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
 const onError = async (error: Error) => {
   if (error instanceof DomainError && error.fatal) {

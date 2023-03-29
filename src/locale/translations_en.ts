@@ -13,9 +13,14 @@ export const TRANSLATIONS_EN = {
     goAheadToBegin: "Go ahead to begin!",
     settings: "Settings",
     search: "Search",
+    movies: "Movies",
+    movieInfo: "Movie Info",
+    topTMDBMovies: "Top movies according to TMDB",
+    favourites: "Favourites",
     emptyScreenPlaceholder:
       "Nothing special here.\n🤷\nCheck out the screens beside!",
     language: "Language",
+    descriptionNotAvailable: "Description not available",
     end: "End",
     changeLanguage: "Change language",
     resetData: "Reset data",
@@ -26,5 +31,6 @@ export const TRANSLATIONS_EN = {
   },
   errors: {
     cannotGetTopRatedMovies: "Cannot get top rated movies",
+    cannotGetMovieDetails: "Cannot get movie details",
   },
 };

@@ -13,7 +13,7 @@ export const i18n = new I18n({ it: TRANSLATIONS_IT, en: TRANSLATIONS_EN });
 export function initI18n() {
   i18n.locale = useSelector(languageState).code;
   i18n.enableFallback = true;
-  i18n.defaultLocale = "en";
+  i18n.defaultLocale = "en-US";
 }
 
 export const LanguageLoader = () => {
@@ -24,7 +24,7 @@ export const LanguageLoader = () => {
    */
   useEffect(() => {
     if (!langCode) return;
-    console.log(`Locale set to ${langCode}`);
+    if (__DEV__) console.log(`Locale set to ${langCode}`);
   }, [langCode]);
 
   initI18n();

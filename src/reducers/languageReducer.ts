@@ -7,7 +7,7 @@ export interface Language {
 }
 
 const languageState: Language = {
-  code: Localization.locale.substring(0, 2),
+  code: Localization.locale,
 };
 
 const languageSlice = createSlice({

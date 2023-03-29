@@ -6,5 +6,6 @@ export { ErrorFragment } from "./fragments/ErrorFragment";
 export { LoadingFragment } from "./fragments/LoadingFragment";
 export { WelcomeFragment } from "./fragments/WelcomeFragment";
 export { Screen } from "./Screen";
+export { MovieItem } from "./MovieItem";
 export { SlidingModal } from "./SlidingModal";
 export { Text } from "./Text";

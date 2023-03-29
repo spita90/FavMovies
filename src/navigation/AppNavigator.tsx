@@ -1,17 +1,16 @@
-import { Octicons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useCallback, useEffect, useRef } from "react";
-import { Animated, Platform, View } from "react-native";
+import { Animated, Platform, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { languageState } from "../reducers/store";
+import { Text } from "../components";
+import { Octicons } from "@expo/vector-icons";
+import { i18n } from "../components/core/LanguageLoader";
+import { languageState, userState } from "../reducers/store";
 import { FavouritesScreen, MainScreen, MovieDetailScreen } from "../screens";
 import { useTw } from "../theme";
-import { Palette } from "../theme/palette";
-import { HomeTabParamList, RootStackParamList } from "./screens";
-
-export const NAV_BAR_HEIGHT_PX = 80;
+import { RootStackParamList } from "./screens";
+import { addFavMovie, removeFavMovie } from "../reducers/userReducer";
 
 /**
  * The root level navigator
@@ -29,11 +28,6 @@ export const AppNavigator = () => {
    */
   const Stack = createStackNavigator<RootStackParamList>();
 
-  /**
-   * Handles the screens in the bottom navigation bar
-   */
-  const Tab = createBottomTabNavigator<HomeTabParamList>();
-
   const fadeInAnim = useRef(new Animated.Value(0)).current;
 
   /**
@@ -47,69 +41,78 @@ export const AppNavigator = () => {
     }).start();
   }, []);
 
-  const tabMenuIcons = {
-    MainStack: (focused: boolean) => (
-      <Octicons name="home" size={30} color={Palette.black80} />
-    ),
-    FavouritesScreen: (focused: boolean) => (
-      <Octicons name="location" size={30} color={Palette.black80} />
-    ),
-  };
-
-  const renderIcon = ({
-    name,
-    focused,
-  }: {
-    name: keyof HomeTabParamList;
-    focused: boolean;
-  }) => {
-    const TabMenuIcon = () => tabMenuIcons[name](focused);
-
-    return (
-      <View style={tw`grow justify-between items-center pt-[20%]`}>
-        <TabMenuIcon />
-        <View
-          style={tw`w-[60px] h-[3px] bg-${focused ? "black80" : "transparent"}`}
-        />
+  const AppTitle = useCallback(
+    () => (
+      <View style={tw`flex-row items-baseline`}>
+        <Text size="tt">Fav</Text>
+        <Text size="tt" bold>
+          Movies
+        </Text>
       </View>
+    ),
+    []
+  );
+
+  const HeaderFavouriteIcon = ({
+    route,
+  }: {
+    route: RouteProp<RootStackParamList, "MovieDetailScreen">;
+  }) => {
+    const { favMoviesIds } = useSelector(userState);
+    const movieId = route.params.movieId;
+    const movieIsInFavs = favMoviesIds.includes(movieId);
+    return (
+      <TouchableOpacity
+        style={tw`px-md h-full justify-center`}
+        onPress={() => {
+          movieIsInFavs ? removeFavMovie(movieId) : addFavMovie(movieId);
+        }}
+      >
+        <Octicons
+          name={movieIsInFavs ? "heart-fill" : "heart"}
+          size={20}
+          color={movieIsInFavs ? "red" : "blue"}
+        />
+      </TouchableOpacity>
     );
   };
 
-  const MainScreenStack = () => (
-    <Stack.Navigator
-      detachInactiveScreens={true}
-      initialRouteName={"MainScreen"}
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="MainScreen" component={MainScreen} />
-      <Stack.Screen
-        name="MovieDetailScreen"
-        component={MovieDetailScreen}
-        options={{ presentation: "card" }}
-      />
-    </Stack.Navigator>
-  );
-
-  const TabNavigator = useCallback(
+  const MainScreenStack = useCallback(
     () => (
-      <Tab.Navigator
-        initialRouteName={"MainStack"}
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) =>
-            renderIcon({ name: route.name, focused }),
-          tabBarStyle: [
-            tw`absolute bg-white m-md rounded-lg`,
-            { height: NAV_BAR_HEIGHT_PX },
-          ],
-        })}
+      <Stack.Navigator
+        detachInactiveScreens={true}
+        initialRouteName={"MainScreen"}
       >
-        <Tab.Screen name="MainStack" component={MainScreenStack} />
-        <Tab.Screen name="FavouritesScreen" component={FavouritesScreen} />
-      </Tab.Navigator>
+        <Stack.Screen
+          name="MainScreen"
+          component={MainScreen}
+          options={({ navigation }) => ({
+            headerTitle: () => <AppTitle />,
+            headerRight: () => (
+              <TouchableOpacity
+                style={tw`px-md h-full justify-center`}
+                onPress={() => navigation.navigate("FavouritesScreen")}
+              >
+                <Text color="blue">{i18n.t("l.favourites")}</Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="MovieDetailScreen"
+          component={MovieDetailScreen}
+          options={({ route }) => ({
+            title: i18n.t("l.movieInfo"),
+            presentation: "card",
+            headerRight: () => <HeaderFavouriteIcon route={route} />,
+          })}
+        />
+        <Stack.Screen
+          name="FavouritesScreen"
+          component={FavouritesScreen}
+          options={{ title: i18n.t("l.favourites") }}
+        />
+      </Stack.Navigator>
     ),
     [languageCode]
   );
@@ -123,7 +126,7 @@ export const AppNavigator = () => {
           formatter: () => `FavMovies`,
         }}
       >
-        <TabNavigator />
+        <MainScreenStack />
       </NavigationContainer>
     </Animated.View>
   );

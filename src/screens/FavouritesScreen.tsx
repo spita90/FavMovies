@@ -3,17 +3,17 @@ import { ScrollView, View } from "react-native";
 import { Button, Screen, Text } from "../components";
 import { i18n } from "../components/core/LanguageLoader";
 import { config } from "../config";
-import { HomeTabScreenProps } from "../navigation/screens";
+import { RootStackScreenProps } from "../navigation/screens";
 import { setLanguage } from "../reducers/languageReducer";
 import { wipeUser } from "../reducers/userReducer";
 import { useTw } from "../theme";
 import { showToast } from "../utils";
 
-const LANGUAGES = ["it", "en"];
+const LANGUAGES = ["it-IT", "en-US"];
 
 export function FavouritesScreen({
   navigation,
-}: HomeTabScreenProps<"FavouritesScreen">) {
+}: RootStackScreenProps<"FavouritesScreen">) {
   const tw = useTw();
   const [dataResetCounter, setDataResetCounter] = useState<number>(0);
 

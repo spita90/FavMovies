@@ -1,20 +1,26 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, RefreshControl, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  View,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { getTopRatedMovies } from "../api/tmdb";
-import { Screen, Text } from "../components";
+import { MovieItem, Screen, Text } from "../components";
 import { i18n } from "../components/core/LanguageLoader";
-import { NAV_BAR_HEIGHT_PX } from "../navigation/AppNavigator";
 import { RootStackScreenProps } from "../navigation/screens";
-import { languageState, userState } from "../reducers/store";
+import { languageState } from "../reducers/store";
 import { useTw } from "../theme";
 import { DomainError, Movie } from "../types";
-import { errorHandler, showToast } from "../utils";
+import { errorHandler } from "../utils";
 
 export function MainScreen({ navigation }: RootStackScreenProps<"MainScreen">) {
   const tw = useTw();
   const { code: langCode } = useSelector(languageState);
-  const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>();
+  const [topRatedMovies, setTopRatedMovies] = useState<{
+    [page: number]: Movie[];
+  }>({});
   const [page, setPage] = useState<number>(1);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -23,11 +29,14 @@ export function MainScreen({ navigation }: RootStackScreenProps<"MainScreen">) {
    */
   const fetchTopRatedMovies = async () => {
     try {
-      if (__DEV__) console.log(`Fetching top rated movies`);
-      const movies = await getTopRatedMovies(page);
+      if (__DEV__) console.log(`Fetching top rated movies page ${page}`);
+      const movies = await getTopRatedMovies(langCode, page);
       if (!movies.results || movies.results.length === 0)
         throw new DomainError("errors.cannotGetTopRatedMovies");
-      setTopRatedMovies(movies.results);
+      setTopRatedMovies((trmovies) => ({
+        ...trmovies,
+        [page]: movies.results,
+      }));
     } catch (e) {
       errorHandler(e);
     } finally {
@@ -37,54 +46,21 @@ export function MainScreen({ navigation }: RootStackScreenProps<"MainScreen">) {
 
   const Header = useCallback(
     () => (
-      <View style={tw`mt-md mb-xl items-center`}>
-        <Text
-          style={tw`mt-xl`}
-          textStyle={tw`text-3xl`}
-          color={"darkBlue"}
-          bold
-        >
-          {`${i18n.t("l.goodMorning")}`}
+      <View style={tw`mb-lg items-center`}>
+        <Text textStyle={tw`text-3xl`} color={"darkBlue"} center bold>
+          {`${i18n.t("l.topTMDBMovies")}`}
         </Text>
       </View>
     ),
     []
   );
 
-  const MoviesList = useCallback(
-    () => (
-      <FlatList
-        style={tw`h-full mt-xxl mx-md rounded-lg overflow-hidden`}
-        showsVerticalScrollIndicator={false}
-        data={topRatedMovies}
-        keyExtractor={({ id: movieId }) => movieId.toString()}
-        ListFooterComponent={
-          <View style={tw`mb-[${NAV_BAR_HEIGHT_PX + 20}]`} />
-        }
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              setRefreshing(true);
-              // TODO
-            }}
-          />
-        }
-        renderItem={({ item: movie }) => <Text>{movie.title}</Text>}
-      />
-    ),
-    [topRatedMovies, refreshing]
-  );
-
-  const ScreenContent = useCallback(
-    () => (
-      <View style={tw`items-center`}>
-        <Header />
-        <MoviesList />
-      </View>
-    ),
-    [topRatedMovies]
-  );
+  /**
+   * Fetch top rated movies on page change
+   */
+  useEffect(() => {
+    fetchTopRatedMovies();
+  }, [page]);
 
   /**
    * Fetches again top rated movies after pull-to-refresh gesture
@@ -96,9 +72,41 @@ export function MainScreen({ navigation }: RootStackScreenProps<"MainScreen">) {
 
   return (
     <Screen>
-      <View style={tw`h-full items-center`}>
-        <ScreenContent />
-      </View>
+      <FlatList
+        style={tw`h-full mt-lg`}
+        showsVerticalScrollIndicator={false}
+        data={Object.values(topRatedMovies).flat()}
+        keyExtractor={({ id: movieId }) => movieId.toString()}
+        onEndReached={() => {
+          setPage(page + 1);
+        }}
+        onEndReachedThreshold={0.8}
+        ListHeaderComponent={() => <Header />}
+        ListFooterComponent={() => (
+          <ActivityIndicator style={tw`py-md`} size={30} />
+        )}
+        ItemSeparatorComponent={() => (
+          <View style={tw`w-full h-[1px] bg-lightGrey`} />
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+            }}
+          />
+        }
+        renderItem={({ item: movie }) => {
+          return (
+            <MovieItem
+              movie={movie}
+              onPress={() =>
+                navigation.navigate("MovieDetailScreen", { movieId: movie.id })
+              }
+            />
+          );
+        }}
+      />
     </Screen>
   );
 }

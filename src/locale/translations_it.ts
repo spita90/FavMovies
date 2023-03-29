@@ -13,9 +13,15 @@ export const TRANSLATIONS_IT = {
     goAheadToBegin: "Vai avanti per iniziare!",
     settings: "Impostazioni",
     search: "Cerca",
+    movies: "Film",
+    movieInfo: "Dettagli Film",
+    topTMDBMovies: "I migliori film secondo TMDB",
+    favourites: "Preferiti",
     emptyScreenPlaceholder:
       "Nulla di speciale qui.\n🤷\nGuarda le schermate accanto!",
     language: "Lingua",
+    descriptionNotAvailable:
+      "Descrizione non disponibile. Prova a cambiare lingua",
     end: "Fine",
     changeLanguage: "Cambia lingua",
     resetData: "Reset dati",
@@ -27,5 +33,6 @@ export const TRANSLATIONS_IT = {
   errors: {
     cannotGetTopRatedMovies:
       "Impossibile ottenere lista dei film più apprezzati",
+    cannotGetMovieDetails: "Impossibile ottenere dettagli del film",
   },
 };

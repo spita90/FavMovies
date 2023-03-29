@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { SCREEN_AVAILABLE_WIDTH } from "../../App";
 import { useTw } from "../theme";
 import { Palette } from "../theme/palette";
 
@@ -40,7 +41,13 @@ export function Screen({
         barStyle={"dark-content"}
         animated
       />
-      <View style={tw`flex-1 ${padded ? "px-xs" : ""}`}>{children}</View>
+      <View
+        style={tw`w-[${SCREEN_AVAILABLE_WIDTH}px] flex-1 ${
+          padded ? "px-xs" : ""
+        }`}
+      >
+        {children}
+      </View>
     </SafeAreaView>
   );
 }

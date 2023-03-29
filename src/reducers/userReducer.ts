@@ -14,10 +14,10 @@ const userSlice = createSlice({
     _setFirstUse(state, action: PayloadAction<boolean>) {
       state.firstUse = action.payload;
     },
-    _addFavMovie(state, action: PayloadAction<string>) {
+    _addFavMovie(state, action: PayloadAction<number>) {
       state.favMoviesIds = [action.payload, ...state.favMoviesIds];
     },
-    _removeFavMovie(state, action: PayloadAction<string>) {
+    _removeFavMovie(state, action: PayloadAction<number>) {
       state.favMoviesIds = state.favMoviesIds.filter(
         (movieId) => movieId !== action.payload
       );
@@ -38,10 +38,10 @@ const { _setFirstUse, _addFavMovie, _removeFavMovie, _wipe } =
 export const setFirstUse = async (firstUse: boolean) =>
   store.dispatch(_setFirstUse(firstUse));
 
-export const addFavMovie = async (movieId: string) =>
+export const addFavMovie = async (movieId: number) =>
   store.dispatch(_addFavMovie(movieId));
 
-export const removeFavMovie = async (movieId: string) =>
+export const removeFavMovie = async (movieId: number) =>
   store.dispatch(_removeFavMovie(movieId));
 
 export const wipeUser = () => store.dispatch(_wipe());
