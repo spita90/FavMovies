@@ -11,9 +11,9 @@ import { showToast } from "../utils";
 
 const LANGUAGES = ["it", "en"];
 
-export function LocationScreen({
+export function FavouritesScreen({
   navigation,
-}: HomeTabScreenProps<"LocationScreen">) {
+}: HomeTabScreenProps<"FavouritesScreen">) {
   const tw = useTw();
   const [dataResetCounter, setDataResetCounter] = useState<number>(0);
 

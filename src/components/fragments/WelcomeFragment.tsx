@@ -14,11 +14,10 @@ import {
   Platform,
   View,
 } from "react-native";
-import { AddCityButton, AnimatedTextInput, Button, CityItem, Text } from "../";
+import { Button, Text } from "../";
 import { SCREEN_AVAILABLE_WIDTH } from "../../../App";
-import { setFirstUse, setName } from "../../reducers/userReducer";
+import { setFirstUse } from "../../reducers/userReducer";
 import { useTw } from "../../theme";
-import { CurrentWeather, WeatherType } from "../../types";
 import { i18n } from "../core/LanguageLoader";
 
 export function WelcomeFragment() {
@@ -27,37 +26,25 @@ export function WelcomeFragment() {
   // state
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
   const [finishing, setFinishing] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>();
 
   // animations refs
-  const cityItemAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const hiSlideAnim = useRef(
-    new Animated.Value(3 * SCREEN_AVAILABLE_WIDTH)
+    new Animated.Value(2 * SCREEN_AVAILABLE_WIDTH)
   ).current;
   const slideAnim = useRef(
-    new Animated.Value(3 * SCREEN_AVAILABLE_WIDTH)
+    new Animated.Value(2 * SCREEN_AVAILABLE_WIDTH)
   ).current;
 
   // page navigation management
   const goPrev = (page: number) => setCurrentPageNumber(page - 1);
 
   const goNext = (page: number) => {
-    if (page < 2) return setCurrentPageNumber(page + 1);
+    if (page < 1) return setCurrentPageNumber(page + 1);
     setFinishing(true);
   };
 
   const finish = () => setFirstUse(false);
-
-  // username management
-  const onUsernameInputValueChanged = (text: string) => {
-    setUsername(text);
-  };
-
-  const usernameIsValid = useMemo(
-    () => !!username && username.trim().length > 0,
-    [username]
-  );
 
   // pages
   const Page0 = useCallback(() => {
@@ -96,55 +83,6 @@ export function WelcomeFragment() {
         <Text size="lg" style={tw`px-lg`} textStyle={tw`leading-10`} center>
           {i18n.t("l.insertName")}
         </Text>
-        <AnimatedTextInput
-          style={tw`mt-xl w-[80%]`}
-          textStyle={tw`text-2xl font-bold`}
-          labelStyle={tw`text-lg`}
-          label={i18n.t("l.insertNameInputCaption")}
-          value={username}
-          onChangeText={onUsernameInputValueChanged}
-          returnKeyType="done"
-        />
-      </View>
-    );
-  }, []);
-
-  // dummy animated city item data to display in last page (tutorial)
-  const dummyCurrentWeather: CurrentWeather = {
-    weather: [
-      {
-        main: WeatherType.Clear,
-        description: "Weather description",
-        icon: "01d",
-      },
-    ],
-    main: {
-      temp: 24,
-    },
-  };
-
-  const Page2 = useCallback(() => {
-    return (
-      <View style={[tw`items-center`, { width: SCREEN_AVAILABLE_WIDTH }]}>
-        <Text style={tw`mt-[20%]`} textStyle={tw`text-5xl`} bold>
-          {i18n.t("l.tutorial")}
-        </Text>
-        <View style={tw`my-xl flex-row items-center`}>
-          <Text style={tw`mr-sm`}>{i18n.t("l.tapIconToAddCity")}</Text>
-          <AddCityButton color="black" />
-        </View>
-        <View style={tw`mt-xl px-lg`}>
-          <Text center>{i18n.t("l.tapCityToCheckOutDetail")}</Text>
-          <Animated.View style={[tw`mt-md`, { opacity: cityItemAnim }]}>
-            <CityItem cityName={"Dummy"} currentWeather={dummyCurrentWeather} />
-          </Animated.View>
-        </View>
-        <View style={tw`mt-lg`}>
-          <Text center>{i18n.t("l.longTapCityToDelete")}</Text>
-        </View>
-        <View style={tw`flex-1 justify-end`}>
-          <Text size="tt">{i18n.t("l.goAheadToBegin")}</Text>
-        </View>
       </View>
     );
   }, []);
@@ -159,22 +97,12 @@ export function WelcomeFragment() {
         ) : (
           <View style={tw`flex-1`} />
         )}
-        {(currentPageNumber !== 1 || usernameIsValid) && (
-          <Button
-            onPress={() => {
-              if (currentPageNumber === 1) {
-                Keyboard.dismiss();
-                setName(username!.trim());
-              }
-              goNext(currentPageNumber);
-            }}
-          >
-            <Octicons name="arrow-right" size={32} color={"black"} />
-          </Button>
-        )}
+        <Button onPress={() => goNext(currentPageNumber)}>
+          <Octicons name="arrow-right" size={32} color={"black"} />
+        </Button>
       </View>
     ),
-    [currentPageNumber, username]
+    [currentPageNumber]
   );
 
   /**
@@ -190,7 +118,7 @@ export function WelcomeFragment() {
     }).start();
 
     Animated.timing(slideAnim, {
-      toValue: -(currentPageNumber - 1) * SCREEN_AVAILABLE_WIDTH,
+      toValue: -(currentPageNumber - 0.5) * SCREEN_AVAILABLE_WIDTH,
       duration: 500,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: Platform.OS !== "web",
@@ -216,37 +144,6 @@ export function WelcomeFragment() {
       }).start(() => finish());
   }, [currentPageNumber, finishing]);
 
-  /**
-   * Handles city item animation
-   */
-  useEffect(() => {
-    setTimeout(() => {
-      if (currentPageNumber === 2) {
-        const animationRef = Animated.timing(cityItemAnim, {
-          toValue: 0,
-          duration: 1500,
-          useNativeDriver: Platform.OS !== "web",
-        });
-        cityItemAnim.addListener((animation) => {
-          if (animation.value === 0) {
-            setTimeout(() => {
-              cityItemAnim.setValue(1);
-              setTimeout(() => {
-                animationRef.start();
-              }, 1000);
-            }, 1000);
-          }
-        });
-        animationRef.start();
-      } else {
-        cityItemAnim.setValue(1);
-      }
-    }, 1000);
-    return () => {
-      cityItemAnim.removeAllListeners();
-    };
-  }, [currentPageNumber]);
-
   return (
     <Animated.View
       style={[
@@ -263,7 +160,6 @@ export function WelcomeFragment() {
       >
         <Page0 />
         <Page1 />
-        <Page2 />
       </Animated.View>
       <Navigation />
     </Animated.View>

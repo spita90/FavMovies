@@ -8,7 +8,7 @@ import { userReducer } from "./userReducer";
 export const rootReducer = combineReducers({
   userState: persistReducer(
     {
-      key: "store.weather-app.user",
+      key: "store.favmovies.user",
       keyPrefix: "",
       storage: AsyncStorage,
     },
@@ -16,7 +16,7 @@ export const rootReducer = combineReducers({
   ),
   languageState: persistReducer(
     {
-      key: "store.weather-app.language",
+      key: "store.favmovies.language",
       keyPrefix: "",
       storage: AsyncStorage,
     },

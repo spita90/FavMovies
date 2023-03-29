@@ -6,12 +6,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { Animated, Platform, View } from "react-native";
 import { useSelector } from "react-redux";
 import { languageState } from "../reducers/store";
-import {
-  LocationScreen,
-  MainScreen,
-  SearchScreen,
-  WeatherDetailScreen,
-} from "../screens";
+import { FavouritesScreen, MainScreen, MovieDetailScreen } from "../screens";
 import { useTw } from "../theme";
 import { Palette } from "../theme/palette";
 import { HomeTabParamList, RootStackParamList } from "./screens";
@@ -56,10 +51,7 @@ export const AppNavigator = () => {
     MainStack: (focused: boolean) => (
       <Octicons name="home" size={30} color={Palette.black80} />
     ),
-    SearchScreen: (focused: boolean) => (
-      <Octicons name="search" size={30} color={Palette.black80} />
-    ),
-    LocationScreen: (focused: boolean) => (
+    FavouritesScreen: (focused: boolean) => (
       <Octicons name="location" size={30} color={Palette.black80} />
     ),
   };
@@ -93,8 +85,8 @@ export const AppNavigator = () => {
     >
       <Stack.Screen name="MainScreen" component={MainScreen} />
       <Stack.Screen
-        name="WeatherDetailScreen"
-        component={WeatherDetailScreen}
+        name="MovieDetailScreen"
+        component={MovieDetailScreen}
         options={{ presentation: "card" }}
       />
     </Stack.Navigator>
@@ -116,8 +108,7 @@ export const AppNavigator = () => {
         })}
       >
         <Tab.Screen name="MainStack" component={MainScreenStack} />
-        <Tab.Screen name="SearchScreen" component={SearchScreen} />
-        <Tab.Screen name="LocationScreen" component={LocationScreen} />
+        <Tab.Screen name="FavouritesScreen" component={FavouritesScreen} />
       </Tab.Navigator>
     ),
     [languageCode]
@@ -129,7 +120,7 @@ export const AppNavigator = () => {
     >
       <NavigationContainer
         documentTitle={{
-          formatter: () => `WeatherApp`,
+          formatter: () => `FavMovies`,
         }}
       >
         <TabNavigator />

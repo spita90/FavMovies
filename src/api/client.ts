@@ -1,25 +1,25 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import axiosRetry from "axios-retry";
 
-const openWeatherMapApiBaseUrl = "https://api.openWeatherMap.org/data/2.5";
+const tmdbApiBaseUrl = "https://api.themoviedb.org/3";
 
-let _openWeatherMapClient: AxiosInstance;
+let _tmdbApiClient: AxiosInstance;
 
 /**
- * The OpenWeatherMap client
+ * The TMDB API client
  */
-export const getOpenWeatherMapClient = () => {
-  if (!_openWeatherMapClient) {
-    _openWeatherMapClient = axios.create({
-      baseURL: openWeatherMapApiBaseUrl,
+export const getTMDBClient = () => {
+  if (!_tmdbApiClient) {
+    _tmdbApiClient = axios.create({
+      baseURL: tmdbApiBaseUrl,
     });
 
-    _openWeatherMapClient.interceptors.request.use(async (request) => {
+    _tmdbApiClient.interceptors.request.use(async (request) => {
       // do something if needed (e.g. log)
       return request;
     });
 
-    _openWeatherMapClient.interceptors.response.use(
+    _tmdbApiClient.interceptors.response.use(
       async (response) => {
         // do something if needed (e.g. log)
         return response;
@@ -30,12 +30,12 @@ export const getOpenWeatherMapClient = () => {
     );
 
     // Manages requests retry, useful when connection condition is poor
-    axiosRetry(_openWeatherMapClient, {
+    axiosRetry(_tmdbApiClient, {
       retries: 3,
       retryDelay: axiosRetry.exponentialDelay,
     });
   }
-  return _openWeatherMapClient;
+  return _tmdbApiClient;
 };
 
 export const noResponse = (response: AxiosResponse) => {

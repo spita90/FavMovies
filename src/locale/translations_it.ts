@@ -7,31 +7,11 @@ export const TRANSLATIONS_IT = {
     back: "Indietro",
     prev: "Indietro",
     next: "Avanti",
-    now: "Adesso",
-    welcome: "Benvenuti a WeatherApp",
+    welcome: "Benvenuti a FavMovies",
     welcomeCaption:
-      "Questa App ti consente di vedere il meteo e le previsioni delle tue città preferite",
-    insertName: "Presentiamoci!\n😃\nCome ti chiami?",
-    insertNameInputCaption: "Nome",
-    tutorial: "Tutorial",
-    tapIconToAddCity: "Premi l'icona per aggiungere una città",
-    tapCityToCheckOutDetail:
-      "Premi la città per conoscere meteo attuale e previsioni",
-    longTapCityToDelete: "Tieni premuta la città per eliminarla",
+      "Questa App ti consente di vedere la classifica dei film più apprezzati, e ti permette di aggiungerli ai tuoi preferiti così non dimenticherai mai di guardarli!",
     goAheadToBegin: "Vai avanti per iniziare!",
-    save: "Salva",
     settings: "Impostazioni",
-    goodMorning: "Buongiorno",
-    addCity: "Aggiungi città",
-    addCitySomeFieldsAreNotFilled: "Alcuni campi non sono stati compilati!",
-    addCityLatLonIncorrectFormat:
-      "Il formato di latitudine/longitudine non è valido! Usare la notazione decimale (DD.DDD)",
-    addCityLatLonSemanticallyIncorrect:
-      "Latitudine/longitudine non valide! Devono essere -90<=Lat<=90, -180<=Lon<=180",
-    addCityAlreadyPresent: "Città già presente!",
-    cityName: "Nome città",
-    latitude: "Latitudine",
-    longitude: "Longitudine",
     search: "Cerca",
     emptyScreenPlaceholder:
       "Nulla di speciale qui.\n🤷\nGuarda le schermate accanto!",
@@ -45,7 +25,7 @@ export const TRANSLATIONS_IT = {
     error: "Errore",
   },
   errors: {
-    rateLimitExcedeed:
-      "Hai superato la soglia di richieste OpenWeatherMap API. Per favore attendere prima di fare nuove ricerche, o contatta lo sviluppatore dell'App",
+    cannotGetTopRatedMovies:
+      "Impossibile ottenere lista dei film più apprezzati",
   },
 };

@@ -7,31 +7,11 @@ export const TRANSLATIONS_EN = {
     back: "Back",
     prev: "Prev",
     next: "Next",
-    now: "Now",
-    welcome: "Welcome to WeatherApp",
+    welcome: "Welcome to FavMovies",
     welcomeCaption:
-      "This App lets you see weather and forecasts of your favourite cities",
-    insertName: "Let's introduce ourselves!\n😃\nWhat is your name?",
-    insertNameInputCaption: "Name",
-    tutorial: "Tutorial",
-    tapIconToAddCity: "Tap the icon to add a new city",
-    tapCityToCheckOutDetail:
-      "Tap the city to check out its current weather and forecasts",
-    longTapCityToDelete: "Long tap on cities to delete them",
+      "This App lets you see the top rated movies ranking, and lets you add them to your favourites so you will never forget to watch them!",
     goAheadToBegin: "Go ahead to begin!",
-    save: "Save",
     settings: "Settings",
-    goodMorning: "Good morning",
-    addCity: "Add city",
-    addCitySomeFieldsAreNotFilled: "Some fields are not filled!",
-    addCityLatLonIncorrectFormat:
-      "Invalid latitude/longitude format! Please use decimal notation (DD.DDD)",
-    addCityLatLonSemanticallyIncorrect:
-      "Invalid latitude/longitude! Must be -90<=Lat<=90, -180<=Lon<=180",
-    addCityAlreadyPresent: "City already present!",
-    cityName: "City name",
-    latitude: "Latitude",
-    longitude: "Longitude",
     search: "Search",
     emptyScreenPlaceholder:
       "Nothing special here.\n🤷\nCheck out the screens beside!",
@@ -45,7 +25,6 @@ export const TRANSLATIONS_EN = {
     error: "Error",
   },
   errors: {
-    rateLimitExcedeed:
-      "You exceeded OpenWeatherMap API rate limit. Please wait before querying again, or contact the App developer.",
+    cannotGetTopRatedMovies: "Cannot get top rated movies",
   },
 };
