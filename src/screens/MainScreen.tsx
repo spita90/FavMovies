@@ -101,7 +101,7 @@ export function MainScreen({ navigation }: RootStackScreenProps<"MainScreen">) {
             <MovieItem
               movie={movie}
               onPress={() =>
-                navigation.navigate("MovieDetailScreen", { movieId: movie.id })
+                navigation.navigate("MovieDetailScreen", { movie: movie })
               }
             />
           );

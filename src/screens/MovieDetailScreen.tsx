@@ -21,7 +21,7 @@ export function MovieDetailScreen({
   const [movieDetails, setMovieDetails] = useState<MovieDetail>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { movieId } = route.params;
+  const { movie } = route.params;
 
   const AboveTheFold = useCallback(() => {
     if (!movieDetails) return null;
@@ -82,7 +82,7 @@ export function MovieDetailScreen({
   const fetchMovieDetails = async () => {
     try {
       if (__DEV__) console.log(`Fetching movie details`);
-      const details = await getMovieDetails(langCode, movieId);
+      const details = await getMovieDetails(langCode, movie.id);
       setMovieDetails(details);
     } catch (e) {
       errorHandler(e);

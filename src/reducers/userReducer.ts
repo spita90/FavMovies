@@ -4,7 +4,7 @@ import { store } from "./store";
 
 const initialUserState: User = {
   firstUse: true,
-  favMoviesIds: [],
+  favMovies: [],
 };
 
 const userSlice = createSlice({
@@ -14,12 +14,12 @@ const userSlice = createSlice({
     _setFirstUse(state, action: PayloadAction<boolean>) {
       state.firstUse = action.payload;
     },
-    _addFavMovie(state, action: PayloadAction<number>) {
-      state.favMoviesIds = [action.payload, ...state.favMoviesIds];
+    _addFavMovie(state, action: PayloadAction<Movie>) {
+      state.favMovies = [action.payload, ...state.favMovies];
     },
     _removeFavMovie(state, action: PayloadAction<number>) {
-      state.favMoviesIds = state.favMoviesIds.filter(
-        (movieId) => movieId !== action.payload
+      state.favMovies = state.favMovies.filter(
+        (movie) => movie.id !== action.payload
       );
     },
     _wipe() {
@@ -38,8 +38,8 @@ const { _setFirstUse, _addFavMovie, _removeFavMovie, _wipe } =
 export const setFirstUse = async (firstUse: boolean) =>
   store.dispatch(_setFirstUse(firstUse));
 
-export const addFavMovie = async (movieId: number) =>
-  store.dispatch(_addFavMovie(movieId));
+export const addFavMovie = async (movie: Movie) =>
+  store.dispatch(_addFavMovie(movie));
 
 export const removeFavMovie = async (movieId: number) =>
   store.dispatch(_removeFavMovie(movieId));

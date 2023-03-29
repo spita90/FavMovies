@@ -7,7 +7,12 @@ import { Text } from "../components";
 import { Octicons } from "@expo/vector-icons";
 import { i18n } from "../components/core/LanguageLoader";
 import { languageState, userState } from "../reducers/store";
-import { FavouritesScreen, MainScreen, MovieDetailScreen } from "../screens";
+import {
+  FavouritesScreen,
+  MainScreen,
+  MovieDetailScreen,
+  SettingsScreen,
+} from "../screens";
 import { useTw } from "../theme";
 import { RootStackParamList } from "./screens";
 import { addFavMovie, removeFavMovie } from "../reducers/userReducer";
@@ -58,14 +63,14 @@ export const AppNavigator = () => {
   }: {
     route: RouteProp<RootStackParamList, "MovieDetailScreen">;
   }) => {
-    const { favMoviesIds } = useSelector(userState);
-    const movieId = route.params.movieId;
-    const movieIsInFavs = favMoviesIds.includes(movieId);
+    const { favMovies: favMoviesIds } = useSelector(userState);
+    const movie = route.params.movie;
+    const movieIsInFavs = favMoviesIds.some((mov) => mov.id === movie.id);
     return (
       <TouchableOpacity
         style={tw`px-md h-full justify-center`}
         onPress={() => {
-          movieIsInFavs ? removeFavMovie(movieId) : addFavMovie(movieId);
+          movieIsInFavs ? removeFavMovie(movie.id) : addFavMovie(movie);
         }}
       >
         <Octicons
@@ -89,12 +94,20 @@ export const AppNavigator = () => {
           options={({ navigation }) => ({
             headerTitle: () => <AppTitle />,
             headerRight: () => (
-              <TouchableOpacity
-                style={tw`px-md h-full justify-center`}
-                onPress={() => navigation.navigate("FavouritesScreen")}
-              >
-                <Text color="blue">{i18n.t("l.favourites")}</Text>
-              </TouchableOpacity>
+              <View style={tw`flex-row`}>
+                <TouchableOpacity
+                  style={tw`px-md h-full justify-center`}
+                  onPress={() => navigation.navigate("FavouritesScreen")}
+                >
+                  <Text color="blue">{i18n.t("l.favourites")}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={tw`px-md h-full justify-center`}
+                  onPress={() => navigation.navigate("SettingsScreen")}
+                >
+                  <Text color="blue">{i18n.t("l.settings")}</Text>
+                </TouchableOpacity>
+              </View>
             ),
           })}
         />
@@ -111,6 +124,11 @@ export const AppNavigator = () => {
           name="FavouritesScreen"
           component={FavouritesScreen}
           options={{ title: i18n.t("l.favourites") }}
+        />
+        <Stack.Screen
+          name="SettingsScreen"
+          component={SettingsScreen}
+          options={{ title: i18n.t("l.settings") }}
         />
       </Stack.Navigator>
     ),
