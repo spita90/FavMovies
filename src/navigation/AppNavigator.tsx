@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useCallback, useEffect, useRef } from "react";
 import { Animated, Platform, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { Text } from "../components";
+import { AppTitle, Text } from "../components";
 import { Octicons } from "@expo/vector-icons";
 import { i18n } from "../components/core/LanguageLoader";
 import { languageState, userState } from "../reducers/store";
@@ -45,18 +45,6 @@ export const AppNavigator = () => {
       useNativeDriver: Platform.OS !== "web",
     }).start();
   }, []);
-
-  const AppTitle = useCallback(
-    () => (
-      <View style={tw`flex-row items-baseline`}>
-        <Text size="tt">Fav</Text>
-        <Text size="tt" bold>
-          Movies
-        </Text>
-      </View>
-    ),
-    []
-  );
 
   const HeaderFavouriteIcon = ({
     route,

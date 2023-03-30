@@ -81,7 +81,10 @@ export function MovieDetailScreen({
 
   const fetchMovieDetails = async () => {
     try {
-      if (__DEV__) console.log(`Fetching movie details`);
+      if (__DEV__)
+        console.log(
+          `Fetching movie details for: ${movie.id} - ${movie.original_title}`
+        );
       const details = await getMovieDetails(langCode, movie.id);
       setMovieDetails(details);
     } catch (e) {

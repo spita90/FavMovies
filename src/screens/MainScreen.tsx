@@ -92,6 +92,8 @@ export function MainScreen({ navigation }: RootStackScreenProps<"MainScreen">) {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => {
+              setPage(1);
+              setTopRatedMovies({});
               setRefreshing(true);
             }}
           />

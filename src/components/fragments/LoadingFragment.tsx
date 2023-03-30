@@ -1,7 +1,7 @@
 import Lottie from "lottie-react-native";
 import React, { useCallback, useMemo } from "react";
 import { View } from "react-native";
-import { Text } from "..";
+import { AppTitle, Text } from "..";
 import { useTw } from "../../theme";
 
 /**
@@ -28,9 +28,9 @@ export const LoadingFragment = () => {
   return (
     <View style={tw`h-full justify-center items-center`}>
       <LottieAnimation />
-      <Text style={tw`mt-lg`} size={"xl"} bold ignoreFontFamily>
-        {`FavMovies`}
-      </Text>
+      <View style={tw`mt-sm`}>
+        <AppTitle ignoreFontFamily />
+      </View>
     </View>
   );
 };
